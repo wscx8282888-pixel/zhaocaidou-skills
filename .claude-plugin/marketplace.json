@@ -1,0 +1,33 @@
+{
+  "name": "zhaocaidou-skills",
+  "description": "招财豆 AI 获客 — 管理员 / 销售 两套 Claude Code 技能包, 接 dowsure-hub.",
+  "owner": {
+    "name": "Leo",
+    "email": "wscx8282888@gmail.com"
+  },
+  "metadata": {
+    "homepage": "https://github.com/wscx8282888-pixel/zhaocaidou-skills"
+  },
+  "plugins": [
+    {
+      "name": "zhaocaidou-admin",
+      "version": "0.1.0",
+      "source": "./admin",
+      "description": "招财豆管理员: 派单 / 审单 / 催单 / 看全表 — 操作 dowsure-hub AI 获客线索池的全权能力. 装这把的人能动所有销售的单子.",
+      "author": {
+        "name": "Leo",
+        "email": "wscx8282888@gmail.com"
+      }
+    },
+    {
+      "name": "zhaocaidou-sales",
+      "version": "0.1.0",
+      "source": "./sales",
+      "description": "招财豆销售: 看分配给我的 AI 获客线索 / 标记跟进状态 / 自然语言回写反馈 — 只能动自己的单子, 不能派单不能看全表.",
+      "author": {
+        "name": "Leo",
+        "email": "wscx8282888@gmail.com"
+      }
+    }
+  ]
+}

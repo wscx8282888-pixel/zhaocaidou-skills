@@ -1,0 +1,20 @@
+{
+  "name": "zhaocaidou-admin",
+  "version": "0.1.0",
+  "description": "招财豆管理员: 派单 / 审单 / 催单 / 看全表 — 操作 dowsure-hub AI 获客线索池的全权能力.",
+  "author": {
+    "name": "Leo",
+    "email": "wscx8282888@gmail.com"
+  },
+  "repository": "https://github.com/wscx8282888-pixel/zhaocaidou-skills",
+  "homepage": "https://github.com/wscx8282888-pixel/zhaocaidou-skills/tree/main/admin",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "claude-agent-sdk",
+    "ai-huoke",
+    "lead-management",
+    "dowsure",
+    "zhaocaidou"
+  ]
+}

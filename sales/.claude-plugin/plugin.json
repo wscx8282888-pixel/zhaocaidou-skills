@@ -1,0 +1,20 @@
+{
+  "name": "zhaocaidou-sales",
+  "version": "0.1.0",
+  "description": "招财豆销售: 看分配给我的 AI 获客线索 / 标记跟进状态 / 自然语言回写反馈 — 只能动自己的单子, 不能派单不能看全表.",
+  "author": {
+    "name": "Leo",
+    "email": "wscx8282888@gmail.com"
+  },
+  "repository": "https://github.com/wscx8282888-pixel/zhaocaidou-skills",
+  "homepage": "https://github.com/wscx8282888-pixel/zhaocaidou-skills/tree/main/sales",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "claude-agent-sdk",
+    "ai-huoke",
+    "lead-management",
+    "dowsure",
+    "zhaocaidou"
+  ]
+}
