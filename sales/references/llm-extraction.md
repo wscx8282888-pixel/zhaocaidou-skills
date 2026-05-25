@@ -17,10 +17,17 @@
 | `followupStatus` | `未联系` / `已联系` / `已跟进` / `已报价` / `已成单` / `已退回` / `已拒绝` |
 | `feedbackQuality` | `质量好` / `一般` / `不合适` |
 | `communicationResult` | `线上推进中` / `计划线下拜访` / `放弃跟进` / `跟进后拒绝` |
+| `followupNudgeResult` (v0.2 二次催按钮) | `还在推进中` / `拿到决策时间` / `没下文了` |
 
-free text: `unsuitableReason` / `additionalRequest`
+free text: `unsuitableReason` / `additionalRequest` / **`rawFeedback`** (销售原始口语)
 number: `dealAmount`
 ISO date: `nextFollowupDate`
+
+## v0.2 关键约定: 永远带 rawFeedback
+
+销售用自然语言反馈时, 不光抽出结构化字段, **也要把销售说的整段原话填到 `rawFeedback`** 一起 POST 进去。这字段会写到飞书表"销售反馈原文"列, 让管理员事后能看到 LLM 抽前的原文 — 如果你 (Claude) 抽错了字段, 管理员能从原文 catch。
+
+例外: 销售只说 "标已联系" / "XX 已成单 5 万" 这种按钮式短指令, 没多余信息, 可以不带 rawFeedback。但任何含上下文/情境/对话内容的消息, 都带上。
 
 ## 状态语义 (dowsure 业务模型: 联系 → 跟进 → 报价 → 成单 / 退回 / 拒绝)
 

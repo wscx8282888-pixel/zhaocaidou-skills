@@ -109,16 +109,18 @@ growthSignalCount, cashPressureSignalCount
 
 ## POST /api/event-marketing/ai-leads/nudge
 
-**Auth**: `Authorization: Bearer $ZHAOCAIDOU_WEBHOOK_SECRET`  
+**Auth**: `Authorization: Bearer $ZHAOCAIDOU_WEBHOOK_SECRET`
+**Query**: `?type=followup-check` (v0.2 二次催) | 默认无 query (一次催)
 **Body**: 无
 
 **Response**:
 ```json
 {
   "ok": true,
-  "scanned": 932,
-  "candidates": 12,
-  "nudged": 7,
+  "mode": "followup-check",     // v0.2 二次催时返回, 默认无 mode 字段
+  "scanned": 13,
+  "candidates": 1,
+  "nudged": 1,
   "skipped": [
     {"recordId": "recXXX", "reason": "状态非已分配"},
     {"recordId": "recYYY", "reason": "派单<24h"},
@@ -126,6 +128,32 @@ growthSignalCount, cashPressureSignalCount
   ]
 }
 ```
+
+### 模式 A: 默认 (一次催 — 未联系 24h+)
+
+筛选:
+1. `assignmentStatus="已分配"`
+2. `followupStatus ∈ {null, "未联系"}`
+3. `assignedTo` 在 sales-roster
+4. `now - 分配时间 >= 24h`
+5. `now - 水信最近推送时间 >= 20h`
+
+推飞书 IM 橙色 header 卡 + 写"水信最近推送时间 + 水信推送次数+1"。
+
+### 模式 B: ?type=followup-check (v0.2 二次催 — 已跟进 24h+)
+
+筛选:
+1. `assignmentStatus="已分配"`
+2. `followupStatus ∈ {已联系, 已跟进, 已报价}` (有进展但卡住)
+3. `assignedTo` 在 sales-roster
+4. `now - 最近反馈时间 >= 24h`
+5. `now - 跟进二次推送时间 >= 20h`
+
+推飞书 IM 蓝色 header 卡 (含 3 按钮 [还在推进中 / 拿到决策时间 / 没下文了]) + 写"跟进二次推送时间 + 跟进二次推送次数+1"。
+
+销售点按钮 → 招财豆 event-handlers.js 调 `/follow-up` 写"跟进二次结果"字段。
+
+**lighthouse cron**: 一次催 09:00 + 二次催 09:15 已配。手动触发用 `?type=followup-check` query 区分。
 
 筛选规则:
 1. `assignmentStatus="已分配"`

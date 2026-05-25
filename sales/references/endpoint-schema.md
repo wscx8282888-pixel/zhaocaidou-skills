@@ -55,7 +55,9 @@ generatedAt            — 派单时间 ms 时间戳
   "unsuitableReason": "free text",
   "additionalRequest": "free text",
   "dealAmount": 12345.67,
-  "nextFollowupDate": "2026-05-30"
+  "nextFollowupDate": "2026-05-30",
+  "rawFeedback": "销售跟我说的原始口语, LLM 抽前的整段 (强烈建议带, 抽错时管理员能看上下文)",
+  "followupNudgeResult": "还在推进中|拿到决策时间|没下文了"
 }
 ```
 

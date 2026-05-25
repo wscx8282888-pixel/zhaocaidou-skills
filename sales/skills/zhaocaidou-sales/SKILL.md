@@ -87,6 +87,11 @@ curl -fsS -X POST "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads/follow-
 - `additionalRequest`: free text
 - `dealAmount`: number (成单后)
 - `nextFollowupDate`: ISO `YYYY-MM-DD`
+- **`rawFeedback`** (v0.2 推荐带): 销售原始口语, LLM 抽前的整段。这字段帮管理员
+  在 LLM 抽错时能看到原始上下文, 是保险绳。除非销售只是说 "标已联系" 这种
+  按钮式短指令, 否则**永远带这个字段**, 把销售说的原话填进去。
+- **`followupNudgeResult`** (v0.2): 销售在二次催卡上点 3 选项之一时用 (招财豆按钮路径
+  自动调, sales skill 一般不直接用这字段)
 
 **用户没说的字段一律不传** (而不是猜)。空写比错写好 — 错写会污染数据。
 

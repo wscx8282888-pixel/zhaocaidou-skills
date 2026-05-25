@@ -141,11 +141,22 @@ zhaocaidou-skills/
 这把 skill 依赖 hub 的两个 endpoint 双轨鉴权 (Bearer 或 cookie):
 
 - `GET /api/event-marketing/ai-leads` — 看线索 (hub commit [`6a165d1`](https://github.com/wscx8282888-pixel/dowsure-hub/commit/6a165d1) 之后才支持 Bearer)
-- `POST /api/event-marketing/ai-leads/follow-up` — 写跟进 (Bearer 一直支持)
+- `POST /api/event-marketing/ai-leads/follow-up` — 写跟进 (Bearer 一直支持; v0.2 加 rawFeedback / followupNudgeResult 字段)
 
-管理员还用 `POST /assign` (无 caller auth, hub 内部 agent token) 和 `POST /nudge` (Bearer)。
+管理员还用 `POST /assign` (无 caller auth, hub 内部 agent token, v0.2 派单前调 LLM 生成增强切入点) 和 `POST /nudge` (Bearer; v0.2 加 `?type=followup-check` 二次催)。
 
 如果 hub 没升级到 6a165d1 之后, skill GET 会被 302 到 /login。这是底线。
+
+## v0.2 更新清单 (2026-05-25)
+
+跟 hub commit [`530775c`](https://github.com/wscx8282888-pixel/dowsure-hub/commit/530775c) → [`608e5a3`](https://github.com/wscx8282888-pixel/dowsure-hub/commit/608e5a3) 配套:
+
+- **字段白名单跟飞书表对齐**: 之前 hub/skill 里写的"已加微信/已绑店/无意向"跟表 schema 不一致, 销售用 sales skill 标会被飞书拒。现已统一改为 dowsure 真实业务模型 (联系→跟进→报价→成单/退回/拒绝)。分配状态 "无效"→"已归档", "已退公海"→"公海池"。
+- **派单前 LLM 增强切入点**: assign route 派单时, hub 调 DeepSeek 综合 Karen 字段生成 60-100 字的"招商话术建议", 塞进 IM 卡 `💡 招财豆话术建议` 行。LLM 失败降级到 Karen 原版不阻断派单。
+- **催单卡字段加厚**: 一次催卡 (橙色) 加了月销/法人/座机/品类/市场。让销售一眼能想起来这是谁、为啥派给他。
+- **新增二次催 (nudge-2)**: 销售标"已联系/已跟进/已报价" 24h+ 没动 → 推蓝色卡 3 按钮 `[还在推进中 / 拿到决策时间 / 没下文了]`, 销售点按钮自动写飞书表"跟进二次结果"。lighthouse cron 北京 09:15 自动跑。
+- **销售反馈原文入表**: 销售用自然语言反馈, 招财豆 LLM 抽完结构化字段时, 同时把整段原话写到飞书表"销售反馈原文"列。管理员能 catch LLM 抽错丢的上下文。
+- **mapper 补 17 字段**: hub 看板能看到反馈质量/沟通结果/成单金额/水信推送/公海原因等之前漏读的字段。
 
 ---
 

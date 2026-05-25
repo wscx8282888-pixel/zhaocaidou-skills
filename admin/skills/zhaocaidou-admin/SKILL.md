@@ -111,21 +111,35 @@ free text 字段: `unsuitableReason / additionalRequest`
 
 `recordId` 缺时可用 `company` 反查 (按"公司名"精确匹配, 取情报生成时间最新一条)。
 
-### 4. 触发催单 (POST /nudge — 平时是腾讯云 cron 每天 09:00 跑, 你可以手动触发)
+### 4. 触发催单 (v0.2: 两种模式, lighthouse cron 已自动跑)
 
 ```bash
+# 模式 A: 一次催 (未联系 24h+) — 北京 09:00 自动跑
 curl -fsS -X POST "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads/nudge" \
+  -H "Authorization: Bearer $ZHAOCAIDOU_WEBHOOK_SECRET" | jq
+
+# 模式 B: 二次催 (已跟进 24h+, v0.2 新) — 北京 09:15 自动跑
+curl -fsS -X POST "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads/nudge?type=followup-check" \
   -H "Authorization: Bearer $ZHAOCAIDOU_WEBHOOK_SECRET" | jq
 ```
 
-无 body。返回 `{ ok, scanned, candidates, nudged, skipped: [{recordId, reason}] }`。
+**模式 A (橙色卡)**: 筛 `未联系/null + 24h+`, 推"派给你 24h 了还没动" 给销售。
+**模式 B (蓝色卡, v0.2)**: 筛 `已联系/已跟进/已报价 + 反馈 24h+`, 推 3 按钮 `[还在推进中 / 拿到决策时间 / 没下文了]`, 销售点完招财豆按钮路径调 `/follow-up` 写"跟进二次结果"字段。
 
-催单逻辑 (双重 dedup):
-- 必须 `assignmentStatus=已分配` + `followupStatus∈{null, 未联系}` + `assignedTo` 在名册
-- `now - 分配时间 >= 24h`
-- `now - 上次催单时间 >= 20h` (避免 spam)
+返回 `{ ok, mode, scanned, candidates, nudged, skipped }`。`mode="followup-check"` 标识走的是二次催 (默认无 mode 字段)。
 
-被催的 lead: 飞书 IM 推个橙色 header 卡 + 写"水信最近推送时间 + 水信推送次数+1"。
+### 5. v0.2: 看销售反馈原文 (LLM 抽错 catch)
+
+每次销售自然语言反馈, 招财豆 LLM 抽完结构化字段时, 也会把整段原话写到飞书表"销售反馈原文"列。如果 hub 看板上某条 lead 字段看起来怪 (LLM 抽错可能), 可以让 Claude:
+
+```bash
+# 拿这条 lead 的 rawFeedback 字段对照看
+curl -fsS -H "Authorization: Bearer $ZHAOCAIDOU_WEBHOOK_SECRET" \
+  "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads" \
+  | jq '.leads[] | select(.recordId == "recXXX") | {followupStatus, communicationResult, rawFeedback}'
+```
+
+对比"销售原话"和"hub 写的字段", 决定要不要让销售重新说一遍 (你帮他改) 或直接调 `/follow-up` 修正字段。
 
 ---
 
