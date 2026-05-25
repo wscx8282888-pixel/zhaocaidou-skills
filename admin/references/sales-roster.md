@@ -9,9 +9,9 @@
 | 中文名 | 部门 | receiver 类型 | id (脱敏) | 备注 |
 |---|---|---|---|---|
 | Leo(自测) | 测试 | open_id | `ou_387f...8f03a` | owner 兼测试销售 |
-| 团结 | 测试 | email | `tjsun@dowsure.com` | v0.2 加 |
-| 东东 | 测试 | email | `oceangao@dowsure.com` | v0.2 加 |
-| Karen | 测试 | email | `karenwang@dowsure.com` | v0.2 加 |
+| 团结 | 测试 | open_id | `ou_a847...fed69` | v0.2 加 (mobile 反查) |
+| 东东 | 测试 | open_id | `ou_1801...6394` | v0.2 加 (mobile 反查) |
+| Karen | 测试 | open_id | `ou_a997...0ed049` | v0.2 加 (mobile 反查) |
 
 ## v0.2 — 加新销售的 3 种方式 (任选其一, 不必都填)
 
