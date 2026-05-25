@@ -9,9 +9,9 @@
 | 中文名 | 部门 | receiver 类型 | id (脱敏) | 备注 |
 |---|---|---|---|---|
 | Leo(自测) | 测试 | open_id | `ou_387f...8f03a` | owner 兼测试销售 |
-| 团结 | 测试 | chat_id | `oc_938b...9718` | v0.2 加, 招财豆↔团结 DM |
-| 东东 | 测试 | chat_id | `oc_3db9...88a1` | v0.2 加, 招财豆↔东东 DM |
-| Karen | 测试 | chat_id | `oc_517a...4f80` | v0.2 加, 招财豆↔Karen DM |
+| 团结 | 测试 | email | `tjsun@dowsure.com` | v0.2 加 |
+| 东东 | 测试 | email | `oceangao@dowsure.com` | v0.2 加 |
+| Karen | 测试 | email | `karenwang@dowsure.com` | v0.2 加 |
 
 ## v0.2 — 加新销售的 3 种方式 (任选其一, 不必都填)
 
