@@ -15,8 +15,8 @@ description: 招财豆 AI 获客销售助手 — 看分配给我的线索 / 标�
 
 - "我手上有多少单还没跟"、"我的线索"、"看我的"
 - "我跟 XX 公司聊了, 他说..."、"加上微信了"、"打了没人接"
-- "标 XX 已联系"、"XX 已加微信"
-- "这单不合适, 对方做 Temu"、"无意向"
+- "标 XX 已联系"、"XX 已报价"
+- "这单不合适, 对方做 Temu"、"已拒绝"
 - "下周二再聊"、"约了线下"
 
 不该触发我的: 派单 / 看全表 / 改别人的单 — 这些是管理员的事。需要让用户找 Leo。
@@ -56,7 +56,8 @@ curl -fsS "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads" \
 
 常见子集 (在过滤后基础上加):
 - 没动过 (新派给我的): `select(.followupStatus == null or .followupStatus == "未联系")`
-- 推进中: `select(.followupStatus | IN("已联系", "已跟进", "已加微信"))`
+- 推进中: `select(.followupStatus | IN("已联系", "已跟进", "已报价"))`
+- 已结束 (终态): `select(.followupStatus | IN("已成单", "已退回", "已拒绝"))`
 - 高优先级先看: `sort_by(.priorityLevel | test("🔥|⭐") | not) | sort_by(.generatedAt) | reverse`
 - 超 24h 没标进展的 (要被催的): `select((now*1000 - .generatedAt) > 86400000 and (.followupStatus == null or .followupStatus == "未联系"))`
 
@@ -78,10 +79,10 @@ curl -fsS -X POST "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads/follow-
   }' | jq
 ```
 
-字段白名单 (hub 不在白名单的值会 skip):
-- `followupStatus`: `未联系` / `已联系` / `已跟进` / `已加微信` / `已绑店` / `已成单` / `无意向`
+字段白名单 (跟飞书表 schema 对齐, 不在白名单的值 hub 会 skip):
+- `followupStatus`: `未联系` / `已联系` / `已跟进` / `已报价` / `已成单` / `已退回` / `已拒绝`
 - `feedbackQuality`: `质量好` / `一般` / `不合适`
-- `communicationResult`: `线上推进中` / `计划线下拜访` / `放弃跟进`
+- `communicationResult`: `线上推进中` / `计划线下拜访` / `放弃跟进` / `跟进后拒绝`
 - `unsuitableReason`: free text
 - `additionalRequest`: free text
 - `dealAmount`: number (成单后)
@@ -112,7 +113,7 @@ curl -fsS -X POST "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads/follow-
 4. ★ 给销售看草稿, 让他确认 ★
    "我准备这样写:
      公司: XX
-     跟进状态: 已加微信
+     跟进状态: 已跟进
      沟通结果: 线上推进中
      下次跟进日期: 2026-06-02
      补充信息: 客户希望了解备货融资具体额度

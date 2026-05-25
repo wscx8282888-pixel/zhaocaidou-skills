@@ -49,9 +49,9 @@ generatedAt            — 派单时间 ms 时间戳
 ```json
 {
   "recordId": "recXXX",
-  "followupStatus": "未联系|已联系|已跟进|已加微信|已绑店|已成单|无意向",
+  "followupStatus": "未联系|已联系|已跟进|已报价|已成单|已退回|已拒绝",
   "feedbackQuality": "质量好|一般|不合适",
-  "communicationResult": "线上推进中|计划线下拜访|放弃跟进",
+  "communicationResult": "线上推进中|计划线下拜访|放弃跟进|跟进后拒绝",
   "unsuitableReason": "free text",
   "additionalRequest": "free text",
   "dealAmount": 12345.67,

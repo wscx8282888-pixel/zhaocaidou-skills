@@ -53,7 +53,7 @@ curl -fsS "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads?refresh=1" | jq
 
 `skipped[]` 看原因:
 - "20h 内已催过" → cron 已经跑过了, 你再手动跑就被去重
-- "状态非已分配" → 该 lead 已被改成"销售退回"/"无效"等
+- "状态非已分配" → 该 lead 已被改成"销售退回"/"已归档"等
 - "assignedTo 不在 sales-roster" → 名册过期, 去 hub 加
 
 ## 招财豆挂了 (派单后卡完全没推, /assign 响应里 notified=0)

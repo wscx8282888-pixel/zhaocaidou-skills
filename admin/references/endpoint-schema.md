@@ -23,7 +23,7 @@
 recordId, company, mobile, companyPhone, mainCategory, mainMarket,
 priorityLevel ("🔥 重点推荐" | "⭐ 优质美国站" | "⚡ 正常触达" | "⚙️ 待补全信息" | "💤 待验证标签"),
 recommendedEntryPoint, recommendedSales, recommendedReason, alternativeSales,
-assignmentStatus ("待 Karen 审核" | "已分配" | "销售退回" | "已退公海" | "无效"),
+assignmentStatus ("待 Karen 审核" | "已分配" | "销售退回" | "公海池" | "已归档"),
 assignedTo, followupStatus, gmvBucket, asinCount, generatedAt (ms),
 legalRep, whyWorthOutreach, city, foundedYears, teamSize, sellerType,
 devStage, financingScenario, estimatedCreditLimit, growthSignalCount, cashPressureSignalCount
@@ -41,7 +41,7 @@ devStage, financingScenario, estimatedCreditLimit, growthSignalCount, cashPressu
   "updates": [
     {
       "recordId": "recXXX",
-      "assignmentStatus": "已分配" | "无效" | "已退公海" | "销售退回",
+      "assignmentStatus": "已分配" | "已归档" | "公海池" | "销售退回",
       "assignedTo": "<中文名, 仅 已分配 时填>",
       "leadSnapshot": { /* 复制对应 lead 的字段, 给 IM 卡渲染用 */ }
     }
@@ -81,9 +81,9 @@ growthSignalCount, cashPressureSignalCount
 {
   "recordId": "recXXX",
   "company": "亚马逊 (用于反查, recordId 缺时)",
-  "followupStatus": "未联系|已联系|已跟进|已加微信|已绑店|已成单|无意向",
+  "followupStatus": "未联系|已联系|已跟进|已报价|已成单|已退回|已拒绝",
   "feedbackQuality": "质量好|一般|不合适",
-  "communicationResult": "线上推进中|计划线下拜访|放弃跟进",
+  "communicationResult": "线上推进中|计划线下拜访|放弃跟进|跟进后拒绝",
   "unsuitableReason": "free text",
   "additionalRequest": "free text",
   "dealAmount": 12345.67,

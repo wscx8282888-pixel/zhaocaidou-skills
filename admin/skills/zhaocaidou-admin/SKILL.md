@@ -1,6 +1,6 @@
 ---
 name: zhaocaidou-admin
-description: 招财豆 AI 获客管理员能力 — 派单 / 审单 / 催单 / 看全表 / 调销售名册. 用户说 "派单"/"派给 XX"/"分配给 XX"/"看今日新单"/"AI 获客线索"/"催跟进"/"招财豆怎么样了"/"哪些客户没人跟"/"退回这单"/"标记无效" 时务必触发, 即使用户没显式说 "招财豆". 这把 skill 调 dowsure-hub 的 ai-leads API, 是 hub /tools/event-marketing 操作台的 CLI 等价物.
+description: 招财豆 AI 获客管理员能力 — 派单 / 审单 / 催单 / 看全表 / 调销售名册. 用户说 "派单"/"派给 XX"/"分配给 XX"/"看今日新单"/"AI 获客线索"/"催跟进"/"招财豆怎么样了"/"哪些客户没人跟"/"退回这单"/"标记归档" 时务必触发, 即使用户没显式说 "招财豆". 这把 skill 调 dowsure-hub 的 ai-leads API, 是 hub /tools/event-marketing 操作台的 CLI 等价物.
 ---
 
 # 招财豆管理员
@@ -13,7 +13,7 @@ description: 招财豆 AI 获客管理员能力 — 派单 / 审单 / 催单 / �
 
 - "今天 AI 获客有多少新单"、"看今日线索"、"AI 获客这周如何"
 - "把 XXX 公司派给 YYY"、"分配 XX 给销售 ZZ"、"派单"
-- "标 XX 无效"、"退回 XX"、"XX 这单算了"
+- "标 XX 归档"、"退回 XX"、"XX 这单算了"
 - "催一下没动的"、"哪些超 24h 没跟进"
 - "改 XX 的跟进状态为已联系"
 
@@ -71,7 +71,7 @@ curl -fsS -X POST "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads/assign"
   }' | jq
 ```
 
-`assignmentStatus` 白名单: `已分配 / 无效 / 已退公海 / 销售退回`
+`assignmentStatus` 白名单: `已分配 / 已归档 / 公海池 / 销售退回`
 
 **派单 (`已分配`) 时必须带 `assignedTo` + 完整 `leadSnapshot`**, 否则推给销售的飞书 IM 卡是空的。`leadSnapshot` 直接从上一步 `/ai-leads` 响应里那条 lead 对象抄字段 (company / mobile / priorityLevel / mainCategory / mainMarket / recommendedEntryPoint / recommendedReason / recommendedSales / legalRep / whyWorthOutreach / city / foundedYears / teamSize / sellerType / devStage / gmvBucket / financingScenario / growthSignalCount / cashPressureSignalCount)。
 
@@ -82,7 +82,7 @@ curl -fsS -X POST "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads/assign"
 
 **销售名册不在表里**, 在 hub 代码 `src/data/sales-roster.ts`。当前快照见 references/sales-roster.md。`assignedTo` 必须是这里的中文名 (而非 openId), hub 会去查 openId。如果 `assignedTo` 不在名册, 表会写但 IM 不推 (会进 `notifySkipped`)。
 
-**派"无效 / 已退公海 / 销售退回"时**不需要 `assignedTo` 和 `leadSnapshot`, 只 PATCH 状态。
+**派"已归档 / 公海池 / 销售退回"时**不需要 `assignedTo` 和 `leadSnapshot`, 只 PATCH 状态。
 
 **批量派单**: `updates` 是数组, 一次能派多条。
 
@@ -102,9 +102,9 @@ curl -fsS -X POST "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads/follow-
 ```
 
 字段白名单 (不在白名单的值被 skip 但不报错, 响应有 `skipped[]`):
-- `followupStatus`: 未联系 / 已联系 / 已跟进 / 已加微信 / 已绑店 / 已成单 / 无意向
+- `followupStatus`: 未联系 / 已联系 / 已跟进 / 已报价 / 已成单 / 已退回 / 已拒绝
 - `feedbackQuality`: 质量好 / 一般 / 不合适
-- `communicationResult`: 线上推进中 / 计划线下拜访 / 放弃跟进
+- `communicationResult`: 线上推进中 / 计划线下拜访 / 放弃跟进 / 跟进后拒绝
 
 free text 字段: `unsuitableReason / additionalRequest`  
 其它: `dealAmount` (成单金额数字), `nextFollowupDate` (ISO YYYY-MM-DD)
@@ -139,7 +139,7 @@ curl -fsS -X POST "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads/nudge" 
 3. 对每条 lead, 看 AI 推荐销售 (recommendedSales) 和评级 (priorityLevel)
 4. 跟用户确认每条派给谁 (或批量按 recommendedSales 派)
 5. POST /assign 批量 updates
-6. 汇报: X 条已派 / Y 条标无效 / Z 条留待审核
+6. 汇报: X 条已派 / Y 条标归档 / Z 条留待审核
 ```
 
 ### 工作流 B: "今天哪些超 24h 没动?"
