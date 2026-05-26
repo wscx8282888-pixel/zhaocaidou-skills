@@ -87,6 +87,8 @@ curl -fsS -X POST "$ZHAOCAIDOU_HUB_BASE_URL/api/event-marketing/ai-leads/follow-
 - `additionalRequest`: free text
 - `dealAmount`: number (成单后)
 - `nextFollowupDate`: ISO `YYYY-MM-DD`
+
+**v0.3 业务联动**: 销售写 `followupStatus=已拒绝` (客户不合适) 或 `已退回` (自己跟不动) → hub **自动**把这条单入公海池, 管理员看板能看到, 等他重派或归档。销售不用再做任何事。
 - **`rawFeedback`** (v0.2 推荐带): 销售原始口语, LLM 抽前的整段。这字段帮管理员
   在 LLM 抽错时能看到原始上下文, 是保险绳。除非销售只是说 "标已联系" 这种
   按钮式短指令, 否则**永远带这个字段**, 把销售说的原话填进去。

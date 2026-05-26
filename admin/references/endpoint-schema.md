@@ -87,11 +87,30 @@ growthSignalCount, cashPressureSignalCount
   "unsuitableReason": "free text",
   "additionalRequest": "free text",
   "dealAmount": 12345.67,
-  "nextFollowupDate": "2026-05-30"
+  "nextFollowupDate": "2026-05-30",
+  "rawFeedback": "销售口语原文 (v0.2)",
+  "followupNudgeResult": "还在推进中|拿到决策时间|没下文了 (v0.2 nudge-2 按钮)",
+  "gonghaiReason": "30天未更新|销售放弃|跟进后拒绝|人工退回 (v0.3, 通常不传, hub 自动按规则推断)"
 }
 ```
 
 不在白名单的值会被 skip 写进响应 `skipped[]`, 不报错。
+
+**v0.3 业务联动 (重要)**: 当 `followupStatus ∈ {已拒绝, 已退回}` 时, hub 自动同步写:
+- `分配状态 = 公海池`
+- `公海流入时间 = now`
+- `公海原因 = ` 按推断 (已拒绝→"跟进后拒绝", 已退回→"销售放弃"; 显式传 gonghaiReason 优先)
+
+**响应** (v0.3 加 `updatedCard`):
+```json
+{
+  "ok": true,
+  "recordId": "recXXX",
+  "updated": { ... 实际写入的字段, 含联动入公海池的 ... },
+  "skipped": [...],
+  "updatedCard": { ... 飞书互动卡片 JSON, 招财豆 callback 用来替换原派单/催单卡 ... }
+}
+```
 
 **Response**:
 ```json

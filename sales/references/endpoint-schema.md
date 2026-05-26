@@ -57,9 +57,12 @@ generatedAt            — 派单时间 ms 时间戳
   "dealAmount": 12345.67,
   "nextFollowupDate": "2026-05-30",
   "rawFeedback": "销售跟我说的原始口语, LLM 抽前的整段 (强烈建议带, 抽错时管理员能看上下文)",
-  "followupNudgeResult": "还在推进中|拿到决策时间|没下文了"
+  "followupNudgeResult": "还在推进中|拿到决策时间|没下文了",
+  "gonghaiReason": "30天未更新|销售放弃|跟进后拒绝|人工退回 (v0.3, 销售一般不传, hub 按规则推断)"
 }
 ```
+
+**v0.3 业务联动**: `followupStatus ∈ {已拒绝, 已退回}` → hub 自动写 `分配状态=公海池 + 公海原因 + 公海流入时间`. 销售不用再做第二步。响应里 `updatedCard` 是飞书互动卡片 JSON, 招财豆 callback 拿来替换原派单卡 (按钮消失变"已登记 ✓").
 
 **字段写入语义**:
 - 不传的字段飞书侧不动 (PATCH 语义)
